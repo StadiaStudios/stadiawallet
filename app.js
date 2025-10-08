@@ -793,18 +793,7 @@ const renderApp = () => {
             <!-- Balance Cards Container -->
             <div class="space-y-4 mb-8">
                 
-            <div class="bg-[white] p-6 rounded-2xl shadow-xl border border-blue-200 border-b-4 border-blue-500">
-              <p class="text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">
-              <span class="text-lg font-extrabold text-blue-600">NETWORTH</span>
-                       INCOME
-              </p>
-                  <h2 class="text-4xl font-extrabold break-all text-gray-800">
-                       ${formatter.format(calculateBalances(AppState.transactions).totalIncome)}
-                     </h2>
-                <p class="mt-2 text-sm font-semibold text-green-600">
-                  Networth Recorded
-                      </p>
-                     </div>
+           
 
                 <!-- NEW: Grand Total Balance Card (Conditional Display) -->
                 ${AppState.isCashAppEnabled ? `
@@ -816,10 +805,21 @@ const renderApp = () => {
                             ${formatter.format(grandTotalBalance)}
                         </h2>
                         <p class="mt-2 text-sm font-semibold text-white">
-                            ${isGrandTotalPositive ? 'All Accounts Total' : 'Warning: Total Negative'}
+                            ${isGrandTotalPositive ? '' : 'Warning: Total Negative'}
                         </p>
                     </div>
                 ` : ''}
+
+                 <div class="bg-[white] p-6 rounded-2xl shadow-xl border border-blue-200 border-b-4 border-blue-500">
+              <p class="text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">
+              <span class="text-lg font-extrabold text-blue-600">NETWORTH</span>
+                       
+              </p>
+                  <h2 class="text-4xl font-extrabold break-all text-gray-800">
+                       ${formatter.format(calculateBalances(AppState.transactions).totalIncome)}
+                     </h2>
+                
+                     </div>
 
                 <!-- Cash Balance Card (Non-Card) -->
                 <!-- Updated card background for light mode -->
