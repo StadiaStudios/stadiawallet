@@ -191,6 +191,53 @@ const saveFullNameToLocalStorage = (fullName) => {
     }
 };
 
+// --- ACTIVITY IMPORT/EXPORT ---
+
+// Download current transactions as a .txt file
+const handleDownloadActivity = () => {
+    try {
+        const data = JSON.stringify(AppState.transactions, null, 2);
+        const blob = new Blob([data], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'wallet_activity.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Error exporting activity:', error);
+    }
+};
+
+// Import transactions from a selected .txt file
+const handleImportActivity = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const parsed = JSON.parse(e.target.result);
+            if (!Array.isArray(parsed)) throw new Error('Invalid file format');
+            
+            // Rebuild timestamps as Date objects
+            const imported = parsed.map(t => ({
+                ...t,
+                timestamp: new Date(t.timestamp)
+            }));
+            
+            // Merge with existing transactions
+            const merged = [...imported, ...AppState.transactions];
+            handleUpdateTransactions(merged);
+            alert('Activity imported successfully!');
+        } catch (error) {
+            alert('Failed to import activity file. Please check the file format.');
+            console.error(error);
+        }
+    };
+    reader.readAsText(file);
+};
+
 
 // --- CORE LOGIC ---
 
@@ -679,12 +726,44 @@ const renderSettingsModal = () => {
                         </div>
                         <button
                             type="submit"
-                            class="w-full p-3 text-white font-bold rounded-lg transition-all shadow-lg bg-green-600 hover:bg-green-700 disabled:opacity-50"
+                            class="w-full p-3 text-white font-bold rounded-lg transition-all shadow-lg bg-gray-600 hover:bg-gray-700 disabled:opacity-100"
                             ${currentFullName.trim() === AppState.fullName.trim() ? 'disabled' : ''}
                         >
                             Save Name
                         </button>
                     </form>
+
+                    <!-- Download / Import Activity -->
+<div class="border-t border-gray-200 pt-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-3">Activity Backup</h3>
+    <div class="space-y-3">
+        <button
+            onclick="handleDownloadActivity()"
+            class="w-full p-3 text-white font-bold rounded-lg bg-gray-600 hover:bg-gray-700 shadow-md transition-all"
+        >
+            Download Activity
+        </button>
+        <label class="w-full block">
+            <input
+                type="file"
+                accept=".txt"
+                onchange="handleImportActivity(event)"
+                class="hidden"
+                id="import-file-input"
+            />
+            <span
+                onclick="document.getElementById('import-file-input').click()"
+                class="w-full inline-block text-center p-3 text-white font-bold rounded-lg bg-gray-600 hover:bg-gray-700 shadow-md transition-all cursor-pointer"
+            >
+                Import Activity
+            </span>
+        </label>
+    </div>
+    <p class="text-sm text-gray-500 mt-2">
+        Download your transaction history as a backup, or import it later to restore.
+    </p>
+</div>
+
                     
                     <!-- Cash App Toggle Switch -->
                     <div class="border-t border-gray-200 pt-6">
@@ -705,6 +784,8 @@ const renderSettingsModal = () => {
                             When enabled, a separate <strong>Card Balance</strong> will be tracked and displayed on the Dashboard.
                         </p>
                     </div>
+<br>
+<span>V1.2.3 (Beta)</span>
 
                 </div>
             </div>
@@ -945,6 +1026,8 @@ window.updateState = updateState;
 window.reRenderOnlyModal = reRenderOnlyModal;
 window.handleToggleCashAppSetting = handleToggleCashAppSetting;
 window.handleSaveFullName = handleSaveFullName; // NEW: Export handler
+window.handleDownloadActivity = handleDownloadActivity;
+window.handleImportActivity = handleImportActivity;
 window.handleDeleteTransaction = handleDeleteTransaction;
 window.handleConfirmDelete = handleConfirmDelete;
 window.handleCancelDelete = handleCancelDelete;
