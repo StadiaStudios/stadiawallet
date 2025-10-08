@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StadiaWallet Cash Tracker</title>
+    <link rel="manifest" href="manifest.json">
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Removed Custom Keyframes for Mobile Slide Up */
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        /* Updated modal background for light mode */
+        .modal-bg {
+            background-color: rgba(0, 0, 0, 0.4); 
+        }
+        /* Custom class to prevent spin on number inputs */
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <!-- All JavaScript, including the Tailwind config, is now loaded via app.js -->
+</head>
+<!-- Changed body background to white and text to dark gray -->
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- The app-root now uses a grid layout for large screens -->
+    <div id="app-root" class="min-h-screen p-4 sm:p-6 pb-20 lg:grid lg:grid-cols-2 lg:gap-10 lg:max-w-7xl lg:mx-auto">
+        <!-- App content will be rendered here -->
+    </div>
+
+    <!-- Modals Container -->
+    <div id="modal-container"></div>
+
+    <!-- Load the application logic from the external file -->
+    <script src="./app.js"></script>
+</body>
+</html>
