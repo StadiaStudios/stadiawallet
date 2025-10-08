@@ -4,8 +4,8 @@
 "description": "StadiaWallet Official App, Track your Cash and Card Balances or even together!",
 "start_url": "index.html",
 "display": "standalone",
-"background_color": "#111",
-"theme_color": "#111",
+"background_color": "white",
+"theme_color": "white",
 "icons": [
 {
 "src": "assets/favicon.png",
@@ -18,4 +18,5 @@
 "type": "image/png"
 }
 ]
+
 }
