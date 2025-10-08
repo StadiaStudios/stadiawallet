@@ -197,14 +197,25 @@ const saveFullNameToLocalStorage = (fullName) => {
 /**
  * Calculates the total balances, including the new grand total.
  */
+// app.js
+
+/**
+ * Calculates the total balances, including the new grand total.
+ */
 const calculateBalances = (transactions) => {
     let totalBalance = 0; // Cash
     let cashAppBalance = 0; // Card
+    let totalIncome = 0; // NEW: Total Income
 
     transactions.forEach(t => {
         const amount = parseFloat(t.amount);
         const effect = t.type === 'income' ? amount : -amount;
 
+        // NEW: Calculate total income
+        if (t.type === 'income') {
+            totalIncome += amount;
+        }
+        
         if (t.isCashApp) {
             cashAppBalance += effect;
         } else {
@@ -214,7 +225,8 @@ const calculateBalances = (transactions) => {
     
     const grandTotalBalance = totalBalance + cashAppBalance; // New calculation
     
-    return { totalBalance, cashAppBalance, grandTotalBalance };
+    // Return the new totalIncome along with balances
+    return { totalBalance, cashAppBalance, grandTotalBalance, totalIncome };
 };
 
 /**
@@ -758,7 +770,7 @@ const renderApp = () => {
             <!-- Header - Full width, not contained by max-w-md on desktop now -->
             <header class="py-4 flex justify-between items-center lg:pt-0">
                 <h1 class="text-3xl font-extrabold text-green-600 mb-2">
-                    StadiaWallet
+                    Wallet
                 </h1>
                 <button
                     onclick="updateState({ isSettingsModalOpen: true })"
@@ -781,6 +793,19 @@ const renderApp = () => {
             <!-- Balance Cards Container -->
             <div class="space-y-4 mb-8">
                 
+            <div class="bg-[white] p-6 rounded-2xl shadow-xl border border-blue-200 border-b-4 border-blue-500">
+              <p class="text-sm font-medium text-gray-500 mb-2 uppercase tracking-widest">
+              <span class="text-lg font-extrabold text-blue-600">NETWORTH</span>
+                       INCOME
+              </p>
+                  <h2 class="text-4xl font-extrabold break-all text-gray-800">
+                       ${formatter.format(calculateBalances(AppState.transactions).totalIncome)}
+                     </h2>
+                <p class="mt-2 text-sm font-semibold text-green-600">
+                  Networth Recorded
+                      </p>
+                     </div>
+
                 <!-- NEW: Grand Total Balance Card (Conditional Display) -->
                 ${AppState.isCashAppEnabled ? `
                     <div class="bg-green-600 p-6 rounded-2xl shadow-xl border-b-4 border-green-500">
